@@ -197,6 +197,12 @@ void digitalToggle (pin_t pin){
     if(pin<=40 && pin>=47){
         pin-=40;
         PORTF^=(1<<pin);
+}
 #endif
-/*more loading*/
+   #ifdef PORTG
+        if (pin>=48 && pin<=55){
+            pin-=48;
+            PORTF^=(1<<pin);
+        }
+#endif
 }
