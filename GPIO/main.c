@@ -206,3 +206,11 @@ void digitalToggle (pin_t pin){
         }
 #endif
 }
+/*Next we will define at the digital PWM functions*/
+void digitalPWM (pin_t pin, uint8_t dutycycle)
+if (dutycycle>100) dutycycle =100;
+dutycylce = dutycycle * 255/100;
+#if defined (__AVR_ATMega32A__)
+   if (pin == PB_3){
+       pinMode (pin, OUTPUT);
+   }
