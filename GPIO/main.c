@@ -226,7 +226,7 @@ dutycylce = dutycycle * 255/100;     /*The duty cycle should be scaled to a 8 bi
    }else if(pin == PD_5){
       pinMode (pin, OUTPUT);
        if(dutycycle == 0){
-        TTRC1A &=~(1<<COM1A1)|(1<<COM1A0);
+        TCCR1A &=~(1<<COM1A1)|(1<<COM1A0);
         digitalWrite (pin, LOW);
         return;
        }
@@ -256,4 +256,37 @@ dutycylce = dutycycle * 255/100;     /*The duty cycle should be scaled to a 8 bi
     OCR2 = dutycycle;
     TCCR2 |=(1<<WGM20)|=(1<<WGM21)|(1<<CS21)|(1<<COM21);
    }
-//loading...
+   #elif defined (__AVR_ATMega328P__) //this code is only applicable if the device is ATMega328P
+   if (pin == PD_6){
+    pinMode (pin, OUTPUT);
+    if(dutycycle == 0){
+        TCCR0A &=~(1<<COM0A1)|(1<<COM0A0);
+       digitalWrite (pin, LOW);
+        return;
+    }
+    OCR0A = dutycycle;
+    TCCR0A |=(1<<WGM00)|(1<<WGM01)|(1<<COM0A1);
+    TCCR0B |=(1<<CS01);
+   }else if (pin == PD_5){
+    pinMode (pin, OUTPUT);
+    if (dutycycle == 0){
+        TCCR0A &=~(1<<COM0B1)|(1<<COM0B0);
+        digitalWrite (pin, LOW);
+        return;
+    }
+    OCR0B = dutycycle;
+    TCCR0A |=(1<<COM0B1)|(1<<WGM00)|(1<<WGM01);
+    TCCR0B |=(1<<CS01);
+   }else if (pin == PB_1){
+    pinMode (pin. OUTPUT)
+    if (dutycycle == 0){
+        TCCR1A &=~(1<<COM1A1)|(1<<COM1A0);
+        digitalWrite (pin, LOW);
+        return;
+    }
+    OCR1A = dutycycle;
+    TCCR1A |=(1<<COM1A1)|(1<<WGM10);
+    TCCR1B |=(1<<CS11)|(1<<WGM12)|(1<<CS10);
+   }else if(pin == PB_2){
+    //This is yet to be implemented
+   }
