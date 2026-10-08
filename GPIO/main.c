@@ -206,11 +206,54 @@ void digitalToggle (pin_t pin){
         }
 #endif
 }
+
 /*Next we will define at the digital PWM functions*/
+
 void digitalPWM (pin_t pin, uint8_t dutycycle)
-if (dutycycle>100) dutycycle =100;
-dutycylce = dutycycle * 255/100;
-#if defined (__AVR_ATMega32A__)
+if (dutycycle>100) dutycycle =100;   /*dutycycle is always 100 even if the user sets its value greater than 100*/
+dutycylce = dutycycle * 255/100;     /*The duty cycle should be scaled to a 8 bit value*/
+#if defined (__AVR_ATMega32A__)      /*only for ATMega32A*/
    if (pin == PB_3){
+       pinMode (pin, OUTPUT);                /*COM0 AND COM1 are internal switches that control the PWM output*/
+       if (dutycycle == 0){
+        TTCR0 &=~(1<<COM01) | (1<<COM00);
+        digitalWrite (pin, LOW);
+        return;
+       }
+      OCR0 = dutycycle;                  /*this is for the timer0 to have something to compare against*/
+      TTCR0 |=(1<<WGM00) | (1<<WGM01) |(1<<CS01) | (1<<COM01);
+
+   }else if(pin == PD_5){
+      pinMode (pin, OUTPUT);
+       if(dutycycle == 0){
+        TTRC1A &=~(1<<COM1A1)|(1<<COM1A0);
+        digitalWrite (pin, LOW);
+        return;
+       }
+       
+       OCR1A = dutycycle;
+			TCCR1A |= (1 << COM1A1) | (1 << WGM10);
+			TCCR1B |= (1 << WGM12) | (1 << CS11);
+   }else if(pin == PD_4){
        pinMode (pin, OUTPUT);
+       
+       if(dutycycle == 0){
+				TCCR1A &= ~((1 << COM1B1) | (1 << COM1B0));       
+				digitalWrite(pin, LOW);
+				
+				return;
+       }
+       OCR1B = dutycycle;
+       TCCR1A |= (1<<COM1B1)|(1<<WGM10);
+       TCCR1B |= (1<<WGM12)|(1<<CS11);
+   }else if(pin == PD_7){
+    pinMode (pin,OUTPUT);
+    if(dutycycle == 0){
+        TCCR2 &=~(1<<COM21)|(1<<COM20);
+        digitalWrite(pin, LOW);
+        return;
+    }
+    OCR2 = dutycycle;
+    TCCR2 |=(1<<WGM20)|=(1<<WGM21)|(1<<CS21)|(1<<COM21);
    }
+//loading...
