@@ -209,7 +209,7 @@ void digitalToggle (pin_t pin){
 
 /*Next we will define at the digital PWM functions*/
 
-void digitalPWM (pin_t pin, uint8_t dutycycle)
+void digitalPWM (pin_t pin, uint8_t dutycycle){
 if (dutycycle>100) dutycycle =100;   /*dutycycle is always 100 even if the user sets its value greater than 100*/
 dutycylce = dutycycle * 255/100;     /*The duty cycle should be scaled to a 8 bit value*/
 #if defined (__AVR_ATMega32A__)      /*only for ATMega32A*/
@@ -278,7 +278,7 @@ dutycylce = dutycycle * 255/100;     /*The duty cycle should be scaled to a 8 bi
     TCCR0A |=(1<<COM0B1)|(1<<WGM00)|(1<<WGM01);
     TCCR0B |=(1<<CS01);
    }else if (pin == PB_1){
-    pinMode (pin. OUTPUT)
+    pinMode (pin, OUTPUT);
     if (dutycycle == 0){
         TCCR1A &=~(1<<COM1A1)|(1<<COM1A0);
         digitalWrite (pin, LOW);
@@ -288,5 +288,48 @@ dutycylce = dutycycle * 255/100;     /*The duty cycle should be scaled to a 8 bi
     TCCR1A |=(1<<COM1A1)|(1<<WGM10);
     TCCR1B |=(1<<CS11)|(1<<WGM12)|(1<<CS10);
    }else if(pin == PB_2){
-    //This is yet to be implemented
+    pinMode (pin, OUTPUT);
+    if (dutycycle == 0){
+        TCCR1A &=~(1<<COM1B1)|(1<<COM1B0);
+        digitalWrite (pin,LOW);
+        return;
+    }
+    OCR1B = dutycycle;
+    TCCR1A |=(1<<COM1B1)|(1<<WGM10);
+    TCCR1B|=(1<<WGM12) |(1<<CS11)|(1<<CS10);
+   }else if (pin == PB_3){
+    pinMode (pin, OUTPUT);
+    if (dutycycle ==0){
+        TCCR2A &=~(1<<COM2A1)|(1<<COM2A0);
+        digitalWrite (pin, LOW);
+        return;
+    }
+    OCR2A = dutycycle;
+    TCCR2A |(1<<COM2A1)|(1<<WGM20)|(1<<WGM21);
+    TCCR2B |=(1<<CS21);
+   }else if (pin == PD_3){
+    pinMode (pin, OUTPUT);
+    if (dutycycle == 0){
+        TCCR2A &=~(1<<COM2B1)|(1<<COM2B0);
+        digitalWrite (pin, LOW);
+        return;
+    }
+    OCR2B = dutycycle;
+    TCCR2A |=(1<<COM2B1)|(1<<WGM20)|(1<<WGM21);
+    TCCR2B |=(1<<CS21);
    }
+   #else
+   #error "The Microcontroller is Invalid"
+   #endif
+}
+/*Now we will write the digitalRead functions*/
+int8_t digitalRead (pin_t pin){
+    #ifdef PINA
+    if (pin<=7){
+        return (PINA)
+    }
+	#endif
+
+	#ifdef PINB
+	//loading...
+}
