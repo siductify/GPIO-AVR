@@ -202,7 +202,7 @@ void digitalToggle (pin_t pin){
    #ifdef PORTG
         if (pin>=48 && pin<=55){
             pin-=48;
-            PORTF^=(1<<pin);
+            PORTG^=(1<<pin);
         }
 #endif
 }
@@ -326,10 +326,98 @@ dutycylce = dutycycle * 255/100;     /*The duty cycle should be scaled to a 8 bi
 int8_t digitalRead (pin_t pin){
     #ifdef PINA
     if (pin<=7){
-        return (PINA)
+        return ((PINA&(1<<pin))? HIGH:LOW);
     }
-	#endif
+    #endif
 
-	#ifdef PINB
-	//loading...
+    #ifdef PINB
+    if (pin>=8 && pin<=15){
+        pin-=8;
+        return((PINB&(1<<pin))?HIGH:LOW);
+    }
+   #endif
+
+   #ifdef PINC
+   if (pin>=16 && pin<=23){
+    pin-=16;
+    return((PINC&(1<<pin))?HIGH:LOW);
+   }
+   #endif
+
+   #ifdef PIND
+   if(pin>=24 && pin<=31){
+    pin-=24;
+    return((PIND&(1<<pin))?HIGH:LOW);
+   }
+   #endif
+
+   #ifdef PINE
+   if(pin>=32 && pin<=39){
+    pin-=32;
+    return((PINE&(1<<pin))?HIGH:LOW);
+   }
+   #endif
+
+   #ifdef PINF
+   if(pin>=40 && pin<=47){
+    pin-=40;
+    return((PINF&=(1<<pin))?HIGH:LOW);
+   }
+   #endif
+
+   #ifdef PING
+   if(pin>=48 && pin<=55){
+    pin-=48;
+    return((PING&(pin))?HIGH:LOW);
+   }
+   #endif
+   #return -1; //for invalid pin
+}
+//next we will write the digitalReadPort function.
+//this function will read the entire port and return the value of the port as an 8 bit value
+
+uint8_t digitalReadPort (pin_t port){
+    #ifdef PINA
+    if(pin<=7){
+        return PINA;
+    }
+    #endif
+
+    #ifdef PINB
+    if(pin>=8 && pin<=15){
+        return PINB;
+    }
+     #endif
+
+    #ifdef PINC
+    if(pin>=16 && pin<=23){
+        return PINC;
+    }
+    #endif
+
+    #ifdef PIND
+    if(pin>=24 && pin<=31){
+        return PIND;
+    }
+    #endif
+
+    #ifdef PINE
+    if(pin>=32 && pin<=39){
+        return PINE;
+    }
+    #endif
+
+    #ifdef PINF
+    if(pin>=40 && pin<=47){
+        return PINF;
+    }
+    #endif
+
+    #ifdef PING
+    if(pin>=48 && pin<=55){
+        return PING;
+    }
+    #endif
+
+    return -1;//invalid port
 }
